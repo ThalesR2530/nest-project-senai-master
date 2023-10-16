@@ -29,15 +29,32 @@ export class UserService {
     return data;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, email?:string) {
     try {
+
+      // if (id) {
+      //   const data: User = await this.prismaService.user.findUnique({
+      //     where: id },
+
+      // });
+    //   delete data.password
+    //   return data;
+    //  } else }
+    //   const data: User = await this.prismaService.user.findUnique({
+    // where :{email },
+    //   });
+    //   return data;
+    // }
+
       const data: User = await this.prismaService.user.findUnique({
-        where: { id },
+        where: id  ? { id } : {email}, 
       });
-      delete data.password;
+      id ? delete data.password : null 
       return data;
+      
     } catch (error) {
-      return 'Id de usuário não existente!';
+    
+      throw Error('id de usuário não existente !');
     }
   }
 
