@@ -27,7 +27,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class AuthService {
     picture: string;
     admin?: boolean;
   }> {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findOne(undefined, email);
     if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
