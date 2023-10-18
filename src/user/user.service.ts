@@ -21,63 +21,62 @@ export class UserService {
   }
 
   async findAll() {
-    const data: Promise<User[]> = this.prismaService.user.findMany();
-    (await data).forEach((element) => {
+    const data: User[] = await this.prismaService.user.findMany();
+
+    data.forEach((element) => {
       delete element.password;
     });
 
     return data;
   }
 
-  async findOne(id: string, email?:string) {
+  async findOne(id?: string, email?: string) {
     try {
-
       // if (id) {
       //   const data: User = await this.prismaService.user.findUnique({
-      //     where: id },
-
-      // });
-    //   delete data.password
-    //   return data;
-    //  } else }
-    //   const data: User = await this.prismaService.user.findUnique({
-    // where :{email },
-    //   });
-    //   return data;
-    // }
+      //     where: { id },
+      //   });
+      //   delete data.password
+      //   return data;
+      // } else{
+      //   const data: User = await this.prismaService.user.findUnique({
+      //     where: { email },
+      //   });
+      //   return data;
+      // }
 
       const data: User = await this.prismaService.user.findUnique({
-        where: id  ? { id } : {email}, 
+        where: id ? { id } : { email }, // ternário tipo de if reduzido
       });
-      id ? delete data.password : null 
+      id ? delete data.password : null;
       return data;
-      
+
+      // delete data.password; //comando para remover a senha do objeto
     } catch (error) {
-    
-      throw Error('id de usuário não existente !');
+      throw Error('Id de usuário não existente !');
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateAuthDto: UpdateUserDto) {
     try {
       const data: User = await this.prismaService.user.update({
         where: { id },
-        data: updateUserDto,
+        data: updateAuthDto,
       });
 
-      delete data.password;
+      delete data.password; //comando para remover a senha do objeto
+
+      return data;
     } catch (error) {
-      return 'id de usuário não existente!';
+      return 'Id de usuário não existente !';
     }
   }
 
-  async remove(id: string){
-  try {
-    const data: User = await this.prismaService.user.delete({where: {id} });
-  } catch (error) {
-    return "Id de usuário não existente!"
-    } 
+  async remove(id: string) {
+    try {
+      await this.prismaService.user.delete({ where: { id } });
+    } catch (error) {
+      return 'Id de usuário não existente !';
+    }
   }
 }
-
-

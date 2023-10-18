@@ -1,14 +1,13 @@
 // import { Controller, Request, Post, UseGuards } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
-// import { ApiOperation, ApiTags } from '@nestjs/swagger';
 // import { LocalAuthGuard } from './decorators/local-auth.guard';
+// import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 // @ApiTags('Auth')
 // @Controller('auth')
 // export class AuthController {
+//   @Post('login')
+//   @ApiOperation({ summary: 'Logar usúario'})
 //   @UseGuards(LocalAuthGuard)
-//   @Post('auth/login')
-//   @ApiOperation({ summary: 'Logar usuário' })
 //   async login(@Request() req) {
 //     return req.user;
 //   }
@@ -24,11 +23,11 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common';
-import { AuthGuard } from './decorators/local-auth.guard'; 
+import { AuthGuard } from './decorators/auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -37,9 +36,9 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
- async signIn(@Body() LoginDto: LoginDto) {
-   const user: User = await this.authService.validateUser(LoginDto.email, LoginDto.password)
-   return this.authService.login(user)
+  async signIn(@Body() loginDto: LoginDto) {
+    const user: User = await this.authService.validateUser(loginDto.email, loginDto.password)
+    return this.authService.login(user)
   }
 
   @UseGuards(AuthGuard)
